@@ -1,20 +1,20 @@
 mod days;
 
 use days::*;
-use std::{env, io};
 use std::time::Instant;
+use std::{env, io};
 
 fn main() {
     let args: Vec<String> = env::args().collect();
 
     let days: Vec<u8> = match args.len() {
         n if n >= 2 => args[1..]
-        .iter()
-        .map(|x| {
-            x.parse()
-                .unwrap_or_else(|v| panic!("Not a valid day: {}", v))
-        })
-        .collect(),
+            .iter()
+            .map(|x| {
+                x.parse()
+                    .unwrap_or_else(|v| panic!("Not a valid day: {}", v))
+            })
+            .collect(),
         _ => (1..=20).step_by(1).collect(),
     };
 

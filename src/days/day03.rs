@@ -4,7 +4,20 @@ use std::{
 };
 
 pub fn solve() -> Result<String> {
-    let _lines = BufReader::new(File::open("./input/03.txt")?).lines();
+    let lines = BufReader::new(File::open("./input/03.txt")?).lines();
 
-    Ok(format!("Not implemented!"))
+    let valid_passwords = lines.map_while(Result::ok).filter(|line| {
+        let len = line.chars().count();
+
+        (4..=12).contains(&len)
+            && line.chars().any(|c| c.is_ascii_digit())
+            && line.chars().any(|c| c.is_uppercase())
+            && line.chars().any(|c| c.is_lowercase())
+            && line.chars().any(|c| (c as u32) > 0x7F)
+    });
+
+    Ok(format!(
+        "There are {} valid passwords.",
+        valid_passwords.count()
+    ))
 }

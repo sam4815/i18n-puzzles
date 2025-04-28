@@ -4,7 +4,9 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+bcrypt = "0.17.0"
 chrono = "0.4.40"
 chrono-tz = "0.10.1"
 encoding_rs = "0.8.35"
+unicode-normalization = "0.1.24"
 unidecode = "0.3.0"

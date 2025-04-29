@@ -3,6 +3,7 @@ extern crate unicode_normalization;
 
 use bcrypt::verify;
 use itertools::Itertools;
+use rayon::prelude::*;
 use unicode_normalization::UnicodeNormalization;
 
 use std::{
@@ -11,7 +12,7 @@ use std::{
     io::{BufReader, Read, Result},
 };
 
-pub fn generate_permutations(str: &str) -> impl Iterator<Item = String> {
+pub fn get_permutations(str: &str) -> impl Iterator<Item = String> {
     str.nfc()
         .map(|ch| {
             let composed = ch.to_string();
@@ -31,33 +32,41 @@ pub fn solve() -> Result<String> {
     let mut input = String::new();
     BufReader::new(File::open("./input/10.txt")?).read_to_string(&mut input)?;
 
-    let (hashed, attempts) = input.trim().split_once("\n\n").unwrap();
+    let (accounts, attempts) = input.trim().split_once("\n\n").unwrap();
 
-    let hash_map: HashMap<_, _> = hashed
+    let attempts: HashMap<String, Vec<&str>> = attempts
         .lines()
         .filter_map(|line| line.split_once(' '))
-        .map(|(username, password)| (username.to_string(), password.to_string()))
+        .fold(HashMap::new(), |mut map, (username, attempt)| {
+            map.entry(username.to_string()).or_default().push(attempt);
+            map
+        });
+
+    let accounts: HashMap<_, _> = accounts
+        .lines()
+        .filter_map(|line| line.split_once(' '))
+        .map(|(username, hash)| (hash.to_string(), attempts.get(username).unwrap().clone()))
         .collect();
 
-    let mut matches: HashMap<String, String> = HashMap::new();
+    let valid_attempts = accounts.par_iter().flat_map(|(hash, attempts)| {
+        let mut invalid: Vec<&str> = Vec::new();
 
-    let valid_attempts = attempts.lines().filter(|line| {
-        let (username, attempt) = line.split_once(" ").unwrap();
+        for attempt in attempts {
+            if invalid.iter().any(|f| f.nfc().eq(attempt.nfc())) {
+                continue;
+            }
 
-        if let Some(password) = matches.get(username) {
-            return password.nfc().eq(attempt.nfc());
-        }
-
-        for variant in generate_permutations(attempt) {
-            if let Some(hash) = hash_map.get(username) {
-                if verify(&variant, hash).unwrap_or(false) {
-                    matches.insert(username.to_string(), attempt.to_string());
-                    return true;
-                }
+            if get_permutations(attempt).any(|variant| verify(&variant, hash).unwrap_or(false)) {
+                return attempts
+                    .iter()
+                    .filter(|a| a.nfc().eq(attempt.nfc()))
+                    .collect();
+            } else {
+                invalid.push(attempt);
             }
         }
 
-        false
+        vec![]
     });
 
     Ok(format!(

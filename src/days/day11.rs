@@ -20,7 +20,7 @@ pub fn solve() -> Result<String> {
     let lines = BufReader::new(File::open("./input/11.txt")?).lines();
     let mut odysseus_map = HashMap::<String, usize>::new();
 
-    for odysseus in vec!["Οδυσσευς", "Οδυσσεως", "Οδυσσει", "Οδυσσεα", "Οδυσσευ"]
+    for odysseus in ["Οδυσσευς", "Οδυσσεως", "Οδυσσει", "Οδυσσεα", "Οδυσσευ"]
     {
         let mut current = odysseus.to_string();
         for i in 1..25 {

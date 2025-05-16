@@ -10,22 +10,24 @@ use chrono::{
 use chrono_tz::Tz;
 
 trait Working {
-    fn is_work_day(self) -> bool;
-    fn is_work_hour(self) -> bool;
-    fn is_holiday(self, holidays: &Vec<(u32, u32)>) -> bool;
+    fn is_work_day(&self) -> bool;
+    fn is_work_hour(&self) -> bool;
+    fn is_holiday(&self, holidays: &[(u32, u32)]) -> bool;
 }
 
 impl Working for DateTime<Tz> {
-    fn is_work_day(self) -> bool {
+    fn is_work_day(&self) -> bool {
         [Mon, Tue, Wed, Thu, Fri].contains(&self.weekday())
     }
 
-    fn is_work_hour(self) -> bool {
+    fn is_work_hour(&self) -> bool {
         (9..=16).contains(&self.hour()) || (self.hour() == 8 && self.minute() >= 30)
     }
 
-    fn is_holiday(self, holidays: &Vec<(u32, u32)>) -> bool {
-        holidays.iter().any(|(day, month)| self.day() == *day && self.month() == *month)
+    fn is_holiday(&self, holidays: &[(u32, u32)]) -> bool {
+        holidays
+            .iter()
+            .any(|(day, month)| self.day() == *day && self.month() == *month)
     }
 }
 
@@ -50,10 +52,7 @@ pub fn solve() -> Result<String> {
     BufReader::new(File::open("./input/15.txt")?).read_to_string(&mut input)?;
 
     let (offices, customers) = input.trim().split_once("\n\n").unwrap();
-    let offices: Vec<(Tz, Vec<(u32, u32)>)> = offices
-        .lines()
-        .map(parse_line)
-        .collect();
+    let offices: Vec<(Tz, Vec<(u32, u32)>)> = offices.lines().map(parse_line).collect();
 
     let start_timestamp = Utc
         .with_ymd_and_hms(2022, 1, 1, 0, 0, 0)

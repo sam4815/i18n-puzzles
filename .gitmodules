@@ -1,0 +1,12 @@
+[submodule "external/2018c"]
+	path = external/2018c
+	url = https://github.com/eggert/tz
+[submodule "external/2018g"]
+	path = external/2018g
+	url = https://github.com/eggert/tz
+[submodule "external/2021b"]
+	path = external/2021b
+	url = https://github.com/eggert/tz
+[submodule "external/2023d"]
+	path = external/2023d
+	url = https://github.com/eggert/tz

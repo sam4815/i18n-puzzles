@@ -227,6 +227,7 @@ dependencies = [
  "encoding_rs",
  "itertools",
  "rayon",
+ "tzfile",
  "unicode-normalization",
  "unidecode",
 ]
@@ -505,6 +506,16 @@ name = "typenum"
 version = "1.18.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1dccffe3ce07af9386bfd29e80c0ab1a8205a2fc34e4bcd40364df902cfa8f3f"
+
+[[package]]
+name = "tzfile"
+version = "0.1.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f59c22c42a2537e4c7ad21a4007273bbc5bebed7f36bc93730a5780e22a4592e"
+dependencies = [
+ "byteorder",
+ "chrono",
+]
 
 [[package]]
 name = "unicode-ident"

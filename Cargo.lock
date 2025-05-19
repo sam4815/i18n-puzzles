@@ -221,6 +221,7 @@ dependencies = [
 name = "i18n-puzzles"
 version = "0.1.0"
 dependencies = [
+ "base64",
  "bcrypt",
  "chrono",
  "chrono-tz",

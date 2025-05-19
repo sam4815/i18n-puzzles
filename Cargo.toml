@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+base64 = "0.22.1"
 bcrypt = "0.17.0"
 chrono = "0.4.40"
 chrono-tz = "0.10.1"
